@@ -3,18 +3,25 @@ import { AppComponent } from './app.component';
 import { JokeTellerService } from './joke-teller.service';
 import { By } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { of } from 'rxjs';
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>
   let component: AppComponent;
+  let jokeTellerServiceSpy: jasmine.SpyObj<JokeTellerService>;
+
+  beforeEach(() => {
+    jokeTellerServiceSpy = jasmine.createSpyObj('JokeTellerService', {
+      tellJoke: of('test joke')
+    })
+  })
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule],
       declarations: [
         AppComponent
       ],
-      providers: [JokeTellerService]
+      providers: [{provide: JokeTellerService, useValue: jokeTellerServiceSpy}]
     }).compileComponents();
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
@@ -38,6 +45,6 @@ describe('AppComponent', () => {
     expect(displayedJoke()).toBeNull()
     clickJokeButton()
     fixture.detectChanges()
-    expect(displayedJoke()).not.toBeNull();
+    expect(displayedJoke()).toBe('test joke');
   })
 });
