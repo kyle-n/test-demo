@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { JokeTellerService } from './joke-teller.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,7 @@ import { JokeTellerService } from './joke-teller.service';
     </header>
     <main>
       <div *ngIf="jokeCount > 0">Joke #{{ jokeCount }}:
-        <span id="good-joke">{{ joke }}</span>
+        <span id="good-joke">{{ joke | async }}</span>
       </div>
       <button (click)="newJoke()">Tell me a new joke</button>
     </main>
@@ -18,7 +19,7 @@ import { JokeTellerService } from './joke-teller.service';
 })
 export class AppComponent {
   jokeCount = 0;
-  joke: string | undefined;
+  joke: Observable<string> | undefined;
 
   constructor(
     private jokeTellerService: JokeTellerService
@@ -26,7 +27,7 @@ export class AppComponent {
   }
 
   newJoke() {
-    this.joke = this.jokeTellerService.tellJoke();
+    this.joke = this.jokeTellerService.tellJoke()
     this.jokeCount++;
   }
 }
