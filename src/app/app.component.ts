@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { JokeTellerService } from './joke-teller.service';
 
 @Component({
   selector: 'app-root',
@@ -6,10 +7,16 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  protected jokeCount = 0;
-  protected joke: string | undefined;
+  jokeCount = 0;
+  joke: string | undefined;
+
+  constructor(
+    private jokeTellerService: JokeTellerService
+  ) {
+  }
 
   newJoke() {
-
+    this.joke = this.jokeTellerService.tellJoke();
+    this.jokeCount++;
   }
 }
